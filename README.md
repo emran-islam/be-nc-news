@@ -15,3 +15,7 @@ Create a .env.test file in the root of the project and add the following:
 PGDATABASE = nc_news_test
 
 Ensure these files are not committed to version control.
+
+3. Adding to .gitignore
+
+Then ensure both files are added to the .gitignore.
