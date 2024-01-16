@@ -1,4 +1,5 @@
 const { fetchTopics } = require("../models/nc-news.models");
+const incompleteEndpoints = require("../endpoints.json");
 
 exports.getTopics = (req, res) => {
   fetchTopics()
@@ -12,4 +13,8 @@ exports.getTopics = (req, res) => {
     .catch((err) => {
       res.status(500).send({ error: "Internal Server Error" });
     });
+};
+
+exports.getDescOnOtherEndpoints = (req, res) => {
+  res.status(200).send(incompleteEndpoints);
 };

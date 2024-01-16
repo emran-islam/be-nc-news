@@ -1,9 +1,12 @@
 const express = require("express");
-
-const { getTopics } = require("./controllers/nc-news.controllers");
-
 const app = express();
 
+const {
+  getTopics,
+  getDescOnOtherEndpoints,
+} = require("./controllers/nc-news.controllers");
+
 app.get("/api/topics", getTopics);
+app.get("/api", getDescOnOtherEndpoints);
 
 module.exports = app;
