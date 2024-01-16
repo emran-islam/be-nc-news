@@ -47,10 +47,34 @@ describe("/api", () => {
   });
 
   test("GET - should handle invalid endpoint", () => {
+    return request(app).get("/api/invalid-endpoint").expect(404);
+  });
+});
+
+describe("/api/articles/:article_id", () => {
+  test("GET - should get an article by its ID", () => {
+    const articleId = 1;
+
     return request(app)
-      .get("/api/invalid-endpoint")
+      .get(`/api/articles/${articleId}`)
       .then((res) => {
-        expect(res.status).toBe(404);
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty("author");
+        expect(res.body).toHaveProperty("title");
+        expect(res.body).toHaveProperty("article_id");
+        expect(res.body).toHaveProperty("body");
+        expect(res.body).toHaveProperty("topic");
+        expect(res.body).toHaveProperty("created_at");
+        expect(res.body).toHaveProperty("votes");
+        expect(res.body).toHaveProperty("article_img_url");
       });
+  });
+
+  test("GET - should handle request for a non-existent article", () => {
+    const nonExistentArticleId = 999999;
+
+    return request(app)
+      .get(`/api/articles/${nonExistentArticleId}`)
+      .expect(404);
   });
 });
