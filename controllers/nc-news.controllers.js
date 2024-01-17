@@ -2,6 +2,7 @@ const {
   fetchTopics,
   fetchArticleByID,
   fetchArticles,
+  fetchCommentsByArticleID,
 } = require("../models/nc-news.models");
 const incompleteEndpoints = require("../endpoints.json");
 
@@ -45,6 +46,18 @@ exports.getArticles = (req, res) => {
       const articlesWithoutBody = articles.map(({ body, ...rest }) => rest);
 
       res.status(200).send(articlesWithoutBody);
+    })
+    .catch((err) => {
+      res.status(500).send({ error: "Internal Server Error" });
+    });
+};
+
+exports.getCommentsByArticleID = (req, res) => {
+  const articleID = req.params.article_id;
+
+  fetchCommentsByArticleID(articleID)
+    .then((comments) => {
+      res.status(200).send(comments);
     })
     .catch((err) => {
       res.status(500).send({ error: "Internal Server Error" });

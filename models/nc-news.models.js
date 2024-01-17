@@ -25,3 +25,16 @@ exports.fetchArticles = () => {
     return result.rows;
   });
 };
+
+exports.fetchCommentsByArticleID = (articleID) => {
+  const query = `
+    SELECT *
+    FROM comments
+    WHERE article_id = $1
+    ORDER BY created_at DESC;
+  `;
+
+  return db.query(query, [articleID]).then((result) => {
+    return result.rows;
+  });
+};
