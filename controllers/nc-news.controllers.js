@@ -1,4 +1,8 @@
-const { fetchTopics, fetchArticleByID } = require("../models/nc-news.models");
+const {
+  fetchTopics,
+  fetchArticleByID,
+  fetchArticles,
+} = require("../models/nc-news.models");
 const incompleteEndpoints = require("../endpoints.json");
 
 exports.getTopics = (req, res) => {
@@ -29,6 +33,18 @@ exports.getArticleByID = (req, res) => {
       } else {
         res.status(200).send(article);
       }
+    })
+    .catch((err) => {
+      res.status(500).send({ error: "Internal Server Error" });
+    });
+};
+
+exports.getArticles = (req, res) => {
+  fetchArticles()
+    .then((articles) => {
+      const articlesWithoutBody = articles.map(({ body, ...rest }) => rest);
+
+      res.status(200).send(articlesWithoutBody);
     })
     .catch((err) => {
       res.status(500).send({ error: "Internal Server Error" });
