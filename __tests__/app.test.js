@@ -53,10 +53,8 @@ describe("/api", () => {
 
 describe("/api/articles/:article_id", () => {
   test("GET - should get an article by its ID", () => {
-    const articleId = 1;
-
     return request(app)
-      .get(`/api/articles/${articleId}`)
+      .get(`/api/articles/1`)
       .then((res) => {
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty("author");
@@ -71,10 +69,39 @@ describe("/api/articles/:article_id", () => {
   });
 
   test("GET - should handle request for a non-existent article", () => {
-    const nonExistentArticleId = 999999;
+    return request(app).get(`/api/articles/999999`).expect(404);
+  });
+});
 
+describe("/api/articles", () => {
+  test("GET - should get all articles by date in descending order and body property removed", () => {
     return request(app)
-      .get(`/api/articles/${nonExistentArticleId}`)
-      .expect(404);
+      .get("/api/articles")
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+
+        const articles = res.body;
+
+        if (articles.length > 1) {
+          for (let i = 0; i < articles.length - 1; i++) {
+            const currentArticleDate = articles[i].created_at;
+            const nextArticleDate = articles[i + 1].created_at;
+            expect(currentArticleDate >= nextArticleDate).toBe(true);
+          }
+
+          articles.forEach((article) => {
+            expect(article).toHaveProperty("author");
+            expect(article).toHaveProperty("title");
+            expect(article).toHaveProperty("article_id");
+            expect(article).toHaveProperty("topic");
+            expect(article).toHaveProperty("created_at");
+            expect(article).toHaveProperty("votes");
+            expect(article).toHaveProperty("article_img_url");
+            expect(article).toHaveProperty("comment_count");
+            expect(article).not.toHaveProperty("body");
+          });
+        }
+      });
   });
 });
