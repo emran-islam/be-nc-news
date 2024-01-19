@@ -11,8 +11,8 @@ afterAll(() => {
   return db.end();
 });
 
-describe("/api/topics", () => {
-  test("GET - should get all topics", () => {
+describe("GET/api/topics", () => {
+  test("should get all topics", () => {
     return request(app)
       .get("/api/topics")
       .then((res) => {
@@ -28,8 +28,8 @@ describe("/api/topics", () => {
   });
 });
 
-describe("/api", () => {
-  test("GET - should provide description about all other endpoints available", () => {
+describe("GET/api", () => {
+  test("should provide description about all other endpoints available", () => {
     return request(app)
       .get("/api")
       .then((res) => {
@@ -46,13 +46,13 @@ describe("/api", () => {
       });
   });
 
-  test("GET - should handle invalid endpoint", () => {
+  test("should handle invalid endpoint", () => {
     return request(app).get("/api/invalid-endpoint").expect(404);
   });
 });
 
-describe("/api/articles/:article_id", () => {
-  test("GET - should get an article by its ID", () => {
+describe("GET/api/articles/:article_id", () => {
+  test("should get an article by its ID", () => {
     return request(app)
       .get("/api/articles/1")
       .then((res) => {
@@ -70,7 +70,7 @@ describe("/api/articles/:article_id", () => {
       });
   });
 
-  test("GET - should handle request for a non-existent article", () => {
+  test("should handle request for a non-existent article", () => {
     return request(app)
       .get("/api/articles/999999")
       .expect(404)
@@ -80,8 +80,8 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe("/api/articles", () => {
-  test("GET - should get all articles by date in descending order and body property removed", () => {
+describe("GET/api/articles", () => {
+  test("should get all articles by date in descending order and body property removed", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -108,8 +108,8 @@ describe("/api/articles", () => {
   });
 });
 
-describe("/api/articles/:article_id/comments", () => {
-  test("GET - should get all comments for an article with most recent comments first", () => {
+describe("GET/api/articles/:article_id/comments", () => {
+  test("should get all comments for an article with most recent comments first", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
@@ -133,8 +133,8 @@ describe("/api/articles/:article_id/comments", () => {
   });
 });
 
-describe("/api/articles/:article_id/comments", () => {
-  test("POST - should add a comment for an article", () => {
+describe("POST/api/articles/:article_id/comments", () => {
+  test("should add a comment for an article", () => {
     const newComment = {
       username: "icellusedkars",
       body: "this is a test comment",
@@ -156,7 +156,7 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 
-  test("POST - status should be 400 when username does not exist", () => {
+  test("status should be 400 when username does not exist", () => {
     const newComment = {
       username: "emran",
       body: "this is a test comment",
@@ -170,7 +170,7 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 
-  test("POST - status should be 400 when invalid article ID", () => {
+  test("status should be 400 when invalid article ID", () => {
     const newComment = {
       username: "butter_bridge",
       body: "this is a test comment",
@@ -184,7 +184,7 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 
-  test("POST - status should be 400 when there is no information on request body", () => {
+  test("status should be 400 when there is no information on request body", () => {
     const newComment = {};
     return request(app)
       .post("/api/articles/1/comments")
@@ -196,24 +196,72 @@ describe("/api/articles/:article_id/comments", () => {
   });
 });
 
-// describe("/api/articles/:article_id", () => {
-//   test("PATCH - updates article by id and responds with the updated article", () => {
-//     const newVote = { inc_votes: 50 };
+describe("PATCH/api/articles/:article_id", () => {
+  test("updates article by id, incrementing by no of votes and responds with the updated article", () => {
+    const newVote = { inc_votes: 50 };
 
-//     return request(app)
-//       .patch("/api/articles/1")
-//       .send(newVote)
-//       .expect(200)
-//       .then((response) => {
-//         expect(typeof response.body).toBe("object");
-//         expect(response.body).toEqual({
-//           article_id: 1,
-//           title: "Living in the shadow of a great man",
-//           body: "I find this existence challenging",
-//           votes: 150,
-//           topic: "mitch",
-//           author: "butter_bridge",
-//         });
-//       });
-//   });
-// });
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(200)
+      .then((response) => {
+        expect(typeof response.body.article).toBe("object");
+        expect(response.body.article).toEqual({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 150,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+
+  test("updates article by id, decrementing by no of votes and responds with the updated article", () => {
+    const newVote = { inc_votes: -50 };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(200)
+      .then((response) => {
+        expect(typeof response.body.article).toBe("object");
+        expect(response.body.article).toEqual({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 50,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+
+  test("returns invalid input when vote is not a number", () => {
+    const newVote = { inc_votes: "emran" };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid input");
+      });
+  });
+
+  test("returns path not found if article id does not exist", () => {
+    const newVote = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/999999")
+      .send(newVote)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Path not found");
+      });
+  });
+});

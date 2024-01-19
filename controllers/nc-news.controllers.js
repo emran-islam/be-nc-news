@@ -4,8 +4,9 @@ const {
   fetchArticles,
   fetchCommentsByArticleID,
   addComment,
-  updateCommentById,
+  updateArticleById,
 } = require("../models/nc-news.models");
+
 const incompleteEndpoints = require("../endpoints.json");
 
 exports.getTopics = (req, res, next) => {
@@ -78,7 +79,8 @@ exports.postCommentsByArticleID = (req, res, next) => {
 exports.patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
-  updateArticleById(article_id, inc_votes)
+
+  updateArticleById(article_id, inc_votes, req.body)
     .then((article) => {
       res.status(200).send({ article });
     })

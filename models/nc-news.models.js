@@ -65,18 +65,25 @@ exports.addComment = (article_id, username, body) => {
     });
 };
 
-exports.updateArticleById = (article_id, inc_votes) => {
-  console.log(article_id, inc_votes);
+exports.updateArticleById = (article_id, newVote = 0, body) => {
+  const paramsKey = Object.keys(body);
+  if (paramsKey.some((key) => key !== "inc_votes")) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  if (typeof newVote !== "number") {
+    return Promise.reject({ status: 400, msg: "Invalid input" });
+  }
   return db
     .query(
-      `UPDATE articles
-       SET votes = votes + $2
-       WHERE article_id = $1
-       RETURNING *;`,
-      [article_id, inc_votes]
+      `UPDATE articles SET votes = votes + ($2) 
+    WHERE article_id = $1 RETURNING *;`,
+      [article_id, newVote]
     )
     .then((result) => {
-      console.log(result);
-      return result;
+      if (result.rows.length) {
+        return result.rows[0];
+      } else {
+        return Promise.reject({ status: 404, msg: "Path not found" });
+      }
     });
 };
