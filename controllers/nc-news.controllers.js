@@ -3,20 +3,17 @@ const {
   fetchArticleByID,
   fetchArticles,
   fetchCommentsByArticleID,
+  addComment,
 } = require("../models/nc-news.models");
 const incompleteEndpoints = require("../endpoints.json");
 
-exports.getTopics = (req, res) => {
+exports.getTopics = (req, res, next) => {
   fetchTopics()
     .then((topics) => {
-      if (topics.length === 0) {
-        return res.status(404).send({ error: "No topics found" });
-      }
-
-      res.status(200).send(topics);
+      res.status(200).send({ topics });
     })
     .catch((err) => {
-      res.status(500).send({ error: "Internal Server Error" });
+      next(err);
     });
 };
 
@@ -24,42 +21,55 @@ exports.getDescOnOtherEndpoints = (req, res) => {
   res.status(200).send(incompleteEndpoints);
 };
 
-exports.getArticleByID = (req, res) => {
-  const articleID = req.params.article_id;
-
-  fetchArticleByID(articleID)
+exports.getArticleByID = (req, res, next) => {
+  const { article_id } = req.params;
+  fetchArticleByID(article_id)
     .then((article) => {
       if (!article) {
-        res.status(404).send({ error: "Article not found" });
+        res.status(404).send({ msg: "Article not found" });
       } else {
-        res.status(200).send(article);
+        res.status(200).send({ article });
       }
     })
     .catch((err) => {
-      res.status(500).send({ error: "Internal Server Error" });
+      next(err);
     });
 };
 
-exports.getArticles = (req, res) => {
+exports.getArticles = (req, res, next) => {
   fetchArticles()
     .then((articles) => {
-      const articlesWithoutBody = articles.map(({ body, ...rest }) => rest);
-
-      res.status(200).send(articlesWithoutBody);
+      res.status(200).send({ articles });
     })
     .catch((err) => {
-      res.status(500).send({ error: "Internal Server Error" });
+      next(err);
     });
 };
 
-exports.getCommentsByArticleID = (req, res) => {
-  const articleID = req.params.article_id;
-
-  fetchCommentsByArticleID(articleID)
+exports.getCommentsByArticleID = (req, res, next) => {
+  const { article_id } = req.params;
+  fetchCommentsByArticleID(article_id)
     .then((comments) => {
-      res.status(200).send(comments);
+      res.status(200).send({ comments });
     })
     .catch((err) => {
-      res.status(500).send({ error: "Internal Server Error" });
+      next(err);
+    });
+};
+
+exports.postCommentsByArticleID = (req, res, next) => {
+  const { article_id } = req.params;
+  const { username, body } = req.body;
+
+  if (!username || !body) {
+    return next({ status: 400, msg: "Invalid input" });
+  }
+
+  addComment(article_id, username, body)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
