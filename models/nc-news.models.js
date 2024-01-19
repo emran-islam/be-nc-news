@@ -64,3 +64,26 @@ exports.addComment = (article_id, username, body) => {
       return result.rows[0];
     });
 };
+
+exports.updateArticleById = (article_id, newVote = 0, body) => {
+  const paramsKey = Object.keys(body);
+  if (paramsKey.some((key) => key !== "inc_votes")) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  if (typeof newVote !== "number") {
+    return Promise.reject({ status: 400, msg: "Invalid input" });
+  }
+  return db
+    .query(
+      `UPDATE articles SET votes = votes + ($2) 
+    WHERE article_id = $1 RETURNING *;`,
+      [article_id, newVote]
+    )
+    .then((result) => {
+      if (result.rows.length) {
+        return result.rows[0];
+      } else {
+        return Promise.reject({ status: 404, msg: "Path not found" });
+      }
+    });
+};

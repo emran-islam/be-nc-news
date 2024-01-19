@@ -15,6 +15,7 @@ const {
   getArticles,
   getCommentsByArticleID,
   postCommentsByArticleID,
+  patchArticleById,
 } = require("./controllers/nc-news.controllers");
 
 app.use(express.json());
@@ -28,6 +29,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleID);
 
 //POST requests
 app.post("/api/articles/:article_id/comments", postCommentsByArticleID);
+
+app.patch("/api/articles/:article_id", patchArticleById);
 
 //Errors
 app.use("*", incorrectEndpointHandler);

@@ -4,7 +4,9 @@ const {
   fetchArticles,
   fetchCommentsByArticleID,
   addComment,
+  updateArticleById,
 } = require("../models/nc-news.models");
+
 const incompleteEndpoints = require("../endpoints.json");
 
 exports.getTopics = (req, res, next) => {
@@ -68,6 +70,19 @@ exports.postCommentsByArticleID = (req, res, next) => {
   addComment(article_id, username, body)
     .then((comment) => {
       res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.patchArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+
+  updateArticleById(article_id, inc_votes, req.body)
+    .then((article) => {
+      res.status(200).send({ article });
     })
     .catch((err) => {
       next(err);
