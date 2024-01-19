@@ -54,5 +54,22 @@
         "created_at": "2020-11-03T21:00:00.000Z"
       }
     ]
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Takes an object containing a comment username and body and responds with the posted comment",
+    "request body": {
+      "username": "icellusedkars",
+      "body": "this is a test comment"
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 19,
+        "body": "this is a test comment",
+        "article_id": 1,
+        "author": "icellusedkars",
+        "votes": 0,
+        "created_at": "2024-01-18T12:02:47.797Z"
+      }
+    }
   }
 }
