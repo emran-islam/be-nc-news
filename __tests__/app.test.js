@@ -195,3 +195,25 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+// describe("/api/articles/:article_id", () => {
+//   test("PATCH - updates article by id and responds with the updated article", () => {
+//     const newVote = { inc_votes: 50 };
+
+//     return request(app)
+//       .patch("/api/articles/1")
+//       .send(newVote)
+//       .expect(200)
+//       .then((response) => {
+//         expect(typeof response.body).toBe("object");
+//         expect(response.body).toEqual({
+//           article_id: 1,
+//           title: "Living in the shadow of a great man",
+//           body: "I find this existence challenging",
+//           votes: 150,
+//           topic: "mitch",
+//           author: "butter_bridge",
+//         });
+//       });
+//   });
+// });

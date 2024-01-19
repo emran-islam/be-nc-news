@@ -64,3 +64,19 @@ exports.addComment = (article_id, username, body) => {
       return result.rows[0];
     });
 };
+
+exports.updateArticleById = (article_id, inc_votes) => {
+  console.log(article_id, inc_votes);
+  return db
+    .query(
+      `UPDATE articles
+       SET votes = votes + $2
+       WHERE article_id = $1
+       RETURNING *;`,
+      [article_id, inc_votes]
+    )
+    .then((result) => {
+      console.log(result);
+      return result;
+    });
+};
