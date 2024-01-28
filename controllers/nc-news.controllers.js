@@ -4,7 +4,8 @@ const {
   fetchArticles,
   fetchCommentsByArticleID,
   addComment,
-  updateArticleById,
+  updateArticleById, 
+  deletesCommentById
 } = require("../models/nc-news.models");
 
 const incompleteEndpoints = require("../endpoints.json");
@@ -88,3 +89,9 @@ exports.patchArticleById = (req, res, next) => {
       next(err);
     });
 };
+
+exports.deleteCommentById = (req, res, next) => {
+  deletesCommentById(req.params.comment_id)
+    .then(() => res.status(204).send())
+    .catch((err) => next(err));
+}

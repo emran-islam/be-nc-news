@@ -71,5 +71,9 @@
         "created_at": "2024-01-18T12:02:47.797Z"
       }
     }
+  },
+
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes the comment end user has selected. Responds with status 204 and no body."
   }
 }
