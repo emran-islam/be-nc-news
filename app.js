@@ -16,6 +16,7 @@ const {
   getCommentsByArticleID,
   postCommentsByArticleID,
   patchArticleById,
+  deleteCommentById,
 } = require("./controllers/nc-news.controllers");
 
 app.use(express.json());
@@ -30,7 +31,11 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleID);
 //POST requests
 app.post("/api/articles/:article_id/comments", postCommentsByArticleID);
 
+//PATCH requests
 app.patch("/api/articles/:article_id", patchArticleById);
+
+// DELETE requests
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 //Errors
 app.use("*", incorrectEndpointHandler);

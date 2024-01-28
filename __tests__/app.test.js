@@ -265,3 +265,18 @@ describe("PATCH/api/articles/:article_id", () => {
       });
   });
 });
+
+describe("DELETE/api/comments/:comment_id", () => {
+  test("should delete the given comment by id", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+
+  test("status should be 404 when comment id does not exist and returns error message", () => {
+    return request(app)
+      .delete("/api/comments/999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comments not found");
+      });
+  });
+});
