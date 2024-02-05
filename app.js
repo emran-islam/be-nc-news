@@ -19,7 +19,7 @@ const {
   patchArticleById,
   deleteCommentById,
 } = require("./controllers/nc-news.controllers");
-
+app.use(cors());
 app.use(express.json());
 
 // GET requests
@@ -43,5 +43,5 @@ app.use("*", incorrectEndpointHandler);
 app.use(customErrorHandler);
 app.use(psqlErrorHandler);
 app.use(internalServerError);
-app.use(cors());
+
 module.exports = app;
