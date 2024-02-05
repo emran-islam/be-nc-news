@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const {
   incorrectEndpointHandler,
@@ -42,5 +43,5 @@ app.use("*", incorrectEndpointHandler);
 app.use(customErrorHandler);
 app.use(psqlErrorHandler);
 app.use(internalServerError);
-
+app.use(cors());
 module.exports = app;
